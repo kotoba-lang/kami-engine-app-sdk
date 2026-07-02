@@ -1,0 +1,81 @@
+# kotoba-lang/kami-ui-sdk
+
+Zero-dep portable `.cljc` — ported from kami-engine's **live**
+`kami-ui-sdk/*.js` files (still present today in
+`kotoba-lang/kami-engine`, never deleted) as part of the
+**clj-wgsl migration** (ADR-2607010930, `com-junkawasaki/root`).
+
+Unlike most of this migration (which restores *deleted* Rust crates),
+this is a **JS -> CLJC port of live source** — six zero-dependency
+browser SDKs for kami-engine WebGPU applications: DOM-overlay UI
+components, animation primitives, DOM particle effects, procedural UI
+sound synthesis, a car-engine audio synthesizer, and a WebRTC bridge.
+
+Each source file's *pure, portable* logic (data transforms, easing/
+spring/envelope math, state derivation, parametric animation curves)
+was ported to idiomatic CLJC; DOM manipulation, Web Audio graph
+construction, and WebRTC/`getUserMedia` plumbing have no CLJC
+equivalent and were excluded — documented per-namespace below.
+
+## Modules
+
+| Namespace | Ported from | What's portable |
+|---|---|---|
+| `src/kami_ui_sdk/ui.cljc` | `kami-ui.js` | Theme data, position->style mapping, `LabelOverlay`'s camera/viewport projection + LOD font-size + culling math, `Button` style derivation, `Toast` color/sound lookups |
+| `src/kami_ui_sdk/motion.cljc` | `kami-motion.js` | All 9 easing functions, tween value-at-t, spring-physics integration step, transform-string building, preset animation prop builders, shake/pulse per-frame math, stagger delay schedule |
+| `src/kami_ui_sdk/effect.cljc` | `kami-effect.js` | Per-particle trajectory math for confetti/sparkle/ripple/floatText/flash/trail (position/scale/opacity as pure functions of normalized time) |
+| `src/kami_ui_sdk/sound.cljc` | `kami-sound.js` | All 15 sound presets as declarative note data, gain-envelope math, frequency-sweep math |
+| `src/kami_ui_sdk/engine_audio.cljc` | `kami-engine-audio.js` | HUD -> synthesis-parameter formulas (fundamental frequency, harmonic gains, lowpass cutoff, engine loudness, induction/tire noise params), impact envelope math |
+| `src/kami_ui_sdk/rtc.cljc` | `kami-rtc.js` | ICE server config data, ~30fps spatial-loop throttle predicate, `rtc_spatialize()` result -> Web Audio `PannerNode` param mapping |
+
+Most of the original JS is DOM/browser-API glue (`document.createElement`,
+`addEventListener`, `AudioContext`/`OscillatorNode`/`PannerNode`
+construction, `RTCPeerConnection`/`getUserMedia`) with no CLJC
+equivalent; each namespace's docstring lists exactly what was excluded
+and why.
+
+## Relationship to `kotoba-lang/rtc` and `kotoba-lang/audio`
+
+Two of the six source files substantially overlap in *domain* (not
+code) with sibling restorations already done in this migration:
+
+- **`kami-rtc.js` vs `kotoba-lang/rtc`** — `kotoba-lang/rtc` already
+  restored the WebRTC domain logic from the Rust `kami-rtc` crate:
+  room/peer/signaling state machines and, critically, `rtc.spatial`'s
+  pan/volume calculation (equal-power pan + inverse-distance rolloff).
+  `kami-rtc.js` is JS-side glue that *calls into* that same logic (via
+  `wasm.rtc_spatialize()`, i.e. the WASM build of the now-CLJC
+  `kotoba-lang/rtc`) and applies the results to `RTCPeerConnection`/
+  `PannerNode` objects. Once the WASM calls and WebRTC/DOM plumbing are
+  excluded, almost nothing independent is left — `kami-ui-sdk.rtc`
+  ports only the ICE config data, the spatial-loop's ~30fps throttle
+  check, and the small unit-conversion step from `rtc.spatial`'s
+  `[left-vol right-vol pan]` output to `PannerNode` gain/`positionX`.
+  The spatial math itself is **not** re-implemented here; it lives in
+  `kotoba-lang/rtc`'s `rtc.spatial`.
+
+- **`kami-sound.js` / `kami-engine-audio.js` vs `kotoba-lang/audio`** —
+  `kotoba-lang/audio` is a 3D *positional audio mixer* (source/
+  listener/rolloff, binaural ITD/ILD, WAV encoding) restored from the
+  Rust `kami-audio` crate. `kami-sound.js` and `kami-engine-audio.js`
+  are a different domain entirely: procedural *UI-sound-effect* and
+  *car-engine* synthesis (oscillator envelopes, frequency sweeps, RPM-
+  driven parameter formulas) — no 3D positioning or mixing involved.
+  There is no shared math to reuse; both restorations are independent
+  and this note exists only to make the domain boundary explicit.
+
+`kami-ui.js`, `kami-motion.js`, and `kami-effect.js` are genuinely new
+UI/animation/visual-effect domain logic with no existing CLJC
+counterpart in this migration and were ported in full (the portable
+subset of each).
+
+## Tests
+
+49 tests / 186 assertions, 0 failures, 0 errors, covering every
+ported public function across all six namespaces.
+
+## Develop
+
+```bash
+clojure -M:test
+```
