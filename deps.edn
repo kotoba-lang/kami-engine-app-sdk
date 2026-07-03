@@ -2,4 +2,9 @@
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {io.github.cognitect-labs/test-runner
                                {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
-                  :main-opts ["-m" "cognitect.test-runner"]}}}
+                  :main-opts ["-m" "cognitect.test-runner"]}
+           ;; kami-ui-sdk.widgets (Slider/ColorSwatch/Carousel) is real DOM CLJS —
+           ;; needed to compile/verify it in a browser. Nothing else in this repo
+           ;; requires ClojureScript (see README).
+           :cljs {:extra-paths ["dev"]
+                  :extra-deps {org.clojure/clojurescript {:mvn/version "1.11.132"}}}}}

@@ -17,6 +17,25 @@ was ported to idiomatic CLJC; DOM manipulation, Web Audio graph
 construction, and WebRTC/`getUserMedia` plumbing have no CLJC
 equivalent and were excluded — documented per-namespace below.
 
+**Deliberate, scoped exception (`kami-ui-sdk.widgets`, ADR-2607031200
+Phase 4):** `Slider`/`ColorSwatch`/`Carousel` — three new picker
+components kami-engine's live JS SDK gained for the VRM character-
+creator app — were ported with their DOM construction *included*,
+behind `#?(:cljs ... :clj (throw (ex-info ...)))` guards (the same
+shape `kotoba-lang/kami-app-character-creator`'s
+`character-creator.persistence` already uses for `localStorage`/file
+download). The "exclude DOM" call above was right for a 1:1
+restoration of many small, DOM-heavy components with no cross-platform
+reader; it does not hold for widgets that are browser-only *by
+nature* — keeping them JS-only would only buy a second implementation
+to keep in sync with this repo's own spring/easing math
+(`kami-ui-sdk.motion`), not any cross-platform benefit. See
+`src/kami_ui_sdk/widgets.cljc`'s namespace docstring for the full
+rationale, and `dev/widgets_demo.{cljs,html}` for a real, browser-
+verified usage example (compile with `clojure -M:cljs -m cljs.main
+--optimizations simple --output-dir dev/out --output-to dev/out/main.js
+-c widgets-demo`, then open `dev/widgets_demo.html`).
+
 ## Modules
 
 | Namespace | Ported from | What's portable |
@@ -27,6 +46,7 @@ equivalent and were excluded — documented per-namespace below.
 | `src/kami_ui_sdk/sound.cljc` | `kami-sound.js` | All 15 sound presets as declarative note data, gain-envelope math, frequency-sweep math |
 | `src/kami_ui_sdk/engine_audio.cljc` | `kami-engine-audio.js` | HUD -> synthesis-parameter formulas (fundamental frequency, harmonic gains, lowpass cutoff, engine loudness, induction/tire noise params), impact envelope math |
 | `src/kami_ui_sdk/rtc.cljc` | `kami-rtc.js` | ICE server config data, ~30fps spatial-loop throttle predicate, `rtc_spatialize()` result -> Web Audio `PannerNode` param mapping |
+| `src/kami_ui_sdk/widgets.cljc` | `kami-ui.js`'s `Slider`/`ColorSwatch`/`Carousel` | Full DOM implementation (deliberate exception, see above) — the only namespace in this repo that isn't "pure logic only" |
 
 Most of the original JS is DOM/browser-API glue (`document.createElement`,
 `addEventListener`, `AudioContext`/`OscillatorNode`/`PannerNode`
@@ -71,11 +91,24 @@ subset of each).
 
 ## Tests
 
-49 tests / 186 assertions, 0 failures, 0 errors, covering every
-ported public function across all six namespaces.
+50 tests / 195 assertions, 0 failures, 0 errors, covering every ported
+public function across all six pure-logic namespaces plus
+`kami-ui-sdk.widgets`'s `:clj`-side throw behavior. `kami-ui-sdk.widgets`'s
+actual DOM behavior is verified separately in a real browser (headless
+Chrome `--dump-dom`/`--screenshot` — 12/12 assertions passed against
+`dev/widgets_demo.html`, since `clojure.test` runs on the JVM and can't
+exercise ClojureScript-compiled DOM code).
 
 ## Develop
 
 ```bash
 clojure -M:test
+```
+
+### `kami-ui-sdk.widgets` (ClojureScript + browser)
+
+```bash
+clojure -M:cljs -m cljs.main --optimizations simple \
+  --output-dir dev/out --output-to dev/out/main.js -c widgets-demo
+open dev/widgets_demo.html   # or serve dev/ and open in a browser
 ```
