@@ -1,9 +1,18 @@
-# kotoba-lang/kami-ui-sdk
+# kotoba-lang/kami-engine-app-sdk
 
 Zero-dep portable `.cljc` — ported from kami-engine's **live**
 `kami-ui-sdk/*.js` files (still present today in
 `kotoba-lang/kami-engine`, never deleted) as part of the
 **clj-wgsl migration** (ADR-2607010930, `com-junkawasaki/root`).
+
+Renamed from `kotoba-lang/kami-ui-sdk` (see
+`90-docs/adr/2607041500-kotoba-lang-ui-family-rename.md` in
+`com-junkawasaki/root`): the six SDKs below cover UI, animation, particle
+effects, procedural audio synthesis, and WebRTC — not UI alone — so
+`kami-engine-app-sdk` names the actual scope (a shared SDK for kami-engine
+consumer apps) and avoids collision with the unrelated `kotoba-ui`/`appkit`/
+`uikit` app design-system family. Internal namespaces (`kami-ui-sdk.*`,
+`src/kami_ui_sdk/`) are unchanged by this rename.
 
 Unlike most of this migration (which restores *deleted* Rust crates),
 this is a **JS -> CLJC port of live source** — six zero-dependency
