@@ -6,7 +6,7 @@ Zero-dep portable `.cljc` — ported from kami-engine's **live**
 **clj-wgsl migration** (ADR-2607010930, `com-junkawasaki/root`).
 
 Renamed from `kotoba-lang/kami-ui-sdk` (see
-`90-docs/adr/2607041500-kotoba-lang-ui-family-rename.md` in
+`90-docs/adr/2607051200-kotoba-lang-ui-family-rename.md` in
 `com-junkawasaki/root`): the six SDKs below cover UI, animation, particle
 effects, procedural audio synthesis, and WebRTC — not UI alone — so
 `kami-engine-app-sdk` names the actual scope (a shared SDK for kami-engine
