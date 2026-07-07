@@ -41,7 +41,8 @@
    - `Button`'s `mouseenter`/`mouseleave` hover-transform listeners.
 
    No overlap with `kotoba-lang/rtc` or `kotoba-lang/audio` — this is
-   DOM/HUD UI logic, a distinct domain.")
+   DOM/HUD UI logic, a distinct domain."
+  (:require [canvaskit.scroll-view :as cksv]))
 
 ;; ─── Theme ───────────────────────────────────────────────────────
 
@@ -92,17 +93,28 @@
      :v-top (- cam-z half-h) :v-bottom (+ cam-z half-h)
      :font-size font-size}))
 
+(defn- viewport->scroll-view
+  "`label-viewport` bounds -> canvaskit scroll-view (ADR-2607071130).
+   The bounds are uniform by construction (half-w = zoom*aspect,
+   half-h = zoom), so zoom-scale = width/(v-right - v-left)
+   = height/(v-bottom - v-top) and offset = [v-left v-top] * zoom-scale."
+  [{:keys [v-left v-right v-top]} width height]
+  (let [k (/ width (- v-right v-left))]
+    (cksv/scroll-view {:bounds [width height]
+                       :zoom-scale k
+                       :content-offset [(* v-left k) (* v-top k)]})))
+
 (defn project-node
   "Pure port of the per-node body of `LabelOverlay.update()`'s loop:
    given a node `{:n :x :z}`, the `label-viewport` bounds, and canvas
    `width`/`height`, returns `{:visible? :sx :sy}` (screen position,
-   `sy` already offset -4px as in the JS)."
-  [{:keys [x z]} {:keys [v-left v-right v-top v-bottom]} width height]
+   `sy` already offset -4px as in the JS). Projection delegates to
+   canvaskit; the world-space cull test is unchanged."
+  [{:keys [x z]} {:keys [v-left v-right v-top v-bottom] :as vp} width height]
   (if (or (< x v-left) (> x v-right) (< z v-top) (> z v-bottom))
     {:visible? false}
-    (let [sx (* (/ (- x v-left) (- v-right v-left)) width)
-          sy (- (* (/ (- z v-top) (- v-bottom v-top)) height) 4)]
-      {:visible? true :sx sx :sy sy})))
+    (let [[sx sy] (cksv/convert-point-to-view (viewport->scroll-view vp width height) [x z])]
+      {:visible? true :sx sx :sy (- sy 4)})))
 
 (defn visible-labels
   "Pure port of `LabelOverlay.update()`'s pool-filling loop: given

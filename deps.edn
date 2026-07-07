@@ -1,4 +1,9 @@
 {:paths ["src" "test"]
+ ;; canvaskit: first-party pure-cljc viewport math (itself zero-dep) —
+ ;; kami-ui-sdk.ui's LabelOverlay projection delegates to it (ADR-2607071130).
+ :deps {io.github.kotoba-lang/canvaskit
+        {:git/url "https://github.com/kotoba-lang/canvaskit.git"
+         :git/sha "fba5b558710faa1414f1e42573aa211645a864e1"}}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {io.github.cognitect-labs/test-runner
                                {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
