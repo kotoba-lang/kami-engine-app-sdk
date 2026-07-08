@@ -12,4 +12,8 @@
            ;; needed to compile/verify it in a browser. Nothing else in this repo
            ;; requires ClojureScript (see README).
            :cljs {:extra-paths ["dev"]
-                  :extra-deps {org.clojure/clojurescript {:mvn/version "1.11.132"}}}}}
+                  :extra-deps {org.clojure/clojurescript {:mvn/version "1.11.132"}}}
+           ;; clj-kondo as a Clojars lib (no Homebrew/system install needed).
+           :lint {:replace-deps {clj-kondo/clj-kondo {:mvn/version "2024.11.14"}}
+                  :main-opts ["-m" "clj-kondo.main" "--lint" "src" "test"
+                              "--fail-level" "error"]}}}
