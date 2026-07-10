@@ -1,3 +1,7 @@
+> **2026-07-10 (ADR-2607102200 addendum 2):** `kami-engine-hud` (`kotoba.ui`
+> hiccup HUD) is merged into this package. Depend on `kami-engine-app-sdk` only;
+> `kami-engine-hud` is archived. Namespace `kotoba.ui` is unchanged.
+
 # kotoba-lang/kami-engine-app-sdk
 
 Zero-dep portable `.cljc` — ported from kami-engine's **live**

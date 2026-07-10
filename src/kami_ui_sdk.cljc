@@ -1,29 +1,23 @@
 (ns kami-ui-sdk
-  "KAMI UI SDK — portable (.cljc) core logic ported from kami-engine's
-   *live* `kami-ui-sdk/*.js` files (kami-ui.js, kami-motion.js,
-   kami-effect.js, kami-sound.js, kami-engine-audio.js, kami-rtc.js —
-   never deleted, still present in `kotoba-lang/kami-engine` today).
+  "KAMI Engine app chrome SDK — browser-side helpers for kami-engine WebGPU apps.
 
-   Provenance note: unlike most of this migration (which restores
-   *deleted* Rust crates), this is a JS -> CLJC port of source that is
-   still live. ADR-2607010930, `com-junkawasaki/root`.
+   Merged surfaces (ADR-2607102200 addendum 2):
+   - `kami-ui-sdk.*` — portable CLJC ports of kami-engine's live kami-ui-sdk JS
+     (ui/motion/effect/sound/engine-audio/rtc/widgets)
+   - `kotoba.ui` — hiccup HUD over the game canvas (:panel/:bar/:minimap/:text,
+     mount!/render!), formerly standalone `kami-engine-hud`
 
-   Each source file has a matching namespace under `kami-ui-sdk.*`.
-   Only the pure, portable logic was ported (data transforms, easing /
-   spring / envelope math, state derivation, parametric curves); DOM
-   manipulation (`document.createElement`, `addEventListener`,
-   `requestAnimationFrame` loops), the Web Audio graph construction
-   itself, and the WebRTC/`getUserMedia` plumbing have no CLJC
-   equivalent and were excluded. Each namespace docstring lists what
-   was excluded and, for `kami-ui-sdk.sound` / `kami-ui-sdk.engine-audio`
-   / `kami-ui-sdk.rtc`, documents the relationship to the sibling
-   restorations `kotoba-lang/audio` and `kotoba-lang/rtc`.
+   One package owns \"what the DOM overlay shows\" and \"how chrome behaves\"
+   (easing, particles, audio cues, RTC spatialize). Distinct from
+   `kami-engine-sdk` (ECS/scene/render-IR) and from `kotoba-ui` (product design system).
 
-   | Namespace                   | Ported from            |
-   |------------------------------|------------------------|
-   | `kami-ui-sdk.ui`             | `kami-ui.js`            |
-   | `kami-ui-sdk.motion`         | `kami-motion.js`        |
-   | `kami-ui-sdk.effect`         | `kami-effect.js`        |
-   | `kami-ui-sdk.sound`          | `kami-sound.js`         |
-   | `kami-ui-sdk.engine-audio`   | `kami-engine-audio.js`  |
-   | `kami-ui-sdk.rtc`            | `kami-rtc.js`           |")
+   | Namespace                   | Role |
+   |------------------------------|------|
+   | `kotoba.ui`                  | EDN HUD overlay (ex-kami-engine-hud) |
+   | `kami-ui-sdk.ui`             | theme / LabelOverlay projection math |
+   | `kami-ui-sdk.motion`         | easing / spring / tween |
+   | `kami-ui-sdk.effect`         | particle trajectories |
+   | `kami-ui-sdk.sound`          | UI sound presets |
+   | `kami-ui-sdk.engine-audio`   | engine synth params |
+   | `kami-ui-sdk.rtc`            | RTC spatialize mapping |
+   | `kami-ui-sdk.widgets`        | DOM Slider/ColorSwatch/Carousel |")
