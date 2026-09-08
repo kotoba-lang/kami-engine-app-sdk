@@ -1,7 +1,12 @@
 {:paths ["src" "test"]
  ;; canvaskit: first-party pure-cljc viewport math (itself zero-dep) —
  ;; kami-ui-sdk.ui's LabelOverlay projection delegates to it (ADR-2607071130).
- :deps {io.github.kotoba-lang/canvaskit
+ :deps {
+        ;; kotoba.lang.text, not clojure.string. Pinned as an explicit floor:
+        ;; tools.deps takes the NEWEST sha it is shown, so without a floor here
+        ;; this repo silently rides whatever a sibling happens to name.
+        io.github.kotoba-lang/text {:git/sha "73bdb13ae7a3d004b44bca08be03a3191157a38f"}
+       io.github.kotoba-lang/canvaskit
         {:git/url "https://github.com/kotoba-lang/canvaskit.git"
          :git/sha "fba5b558710faa1414f1e42573aa211645a864e1"}}
  :aliases {:test {:extra-paths ["test"]
