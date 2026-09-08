@@ -42,7 +42,7 @@
 
    No overlap with `kotoba-lang/rtc` or `kotoba-lang/audio` — this is
    UI/DOM animation math, a distinct domain."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (def PI #?(:clj Math/PI :cljs js/Math.PI))
 

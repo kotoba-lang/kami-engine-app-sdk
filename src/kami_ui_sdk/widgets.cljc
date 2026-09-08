@@ -39,7 +39,7 @@
    oversight.
 
    `:clj` calls throw a clear `ex-info` rather than silently no-op'ing."
-  (:require [kami-ui-sdk.ui :as ui]
+  (:require [kotoba.lang.text] [kami-ui-sdk.ui :as ui]
             [kami-ui-sdk.motion :as motion]))
 
 (defn- browser-only! [fn-name]
@@ -278,7 +278,7 @@
                         (.appendChild stage img))
                       :else
                       (set! (.-textContent stage)
-                            (-> (or (:label item) (:id item) "?") str (subs 0 1) clojure.string/upper-case))))
+                            (-> (or (:label item) (:id item) "?") str (subs 0 1) kotoba.lang.text/upper))))
                   (set! (.-textContent label-el) (str (or (:label item) (:id item) ""))))))
             (page! [dir]
               (when (seq items)
