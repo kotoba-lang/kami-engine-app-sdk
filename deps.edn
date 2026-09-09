@@ -11,7 +11,7 @@
          :git/sha "fba5b558710faa1414f1e42573aa211645a864e1"}}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {io.github.cognitect-labs/test-runner
-                               {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                               {:git/tag "v0.5.1" :git/sha "dfb30dd6605cb6c0efc275e1df1736f6e90d4d73"}}
                   :main-opts ["-m" "cognitect.test-runner"]}
            ;; kami-ui-sdk.widgets (Slider/ColorSwatch/Carousel) is real DOM CLJS —
            ;; needed to compile/verify it in a browser. Nothing else in this repo
