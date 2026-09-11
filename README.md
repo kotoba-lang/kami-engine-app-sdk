@@ -45,7 +45,7 @@ to keep in sync with this repo's own spring/easing math
 (`kami-ui-sdk.motion`), not any cross-platform benefit. See
 `src/kami_ui_sdk/widgets.cljk`'s namespace docstring for the full
 rationale, and `dev/widgets_demo.{cljs,html}` for a real, browser-
-verified usage example (compile with `clojure -M:cljs -m cljs.main
+verified usage example (compile with `kbb -M:cljs -m cljs.main
 --optimizations simple --output-dir dev/out --output-to dev/out/main.js
 -c widgets-demo`, then open `dev/widgets_demo.html`).
 
@@ -115,13 +115,13 @@ exercise ClojureScript-compiled DOM code).
 ## Develop
 
 ```bash
-clojure -M:test
+kbb -M:test
 ```
 
 ### `kami-ui-sdk.widgets` (ClojureScript + browser)
 
 ```bash
-clojure -M:cljs -m cljs.main --optimizations simple \
+kbb -M:cljs -m cljs.main --optimizations simple \
   --output-dir dev/out --output-to dev/out/main.js -c widgets-demo
 open dev/widgets_demo.html   # or serve dev/ and open in a browser
 ```
