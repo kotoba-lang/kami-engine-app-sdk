@@ -4,7 +4,7 @@
    absent from :clj compilation, not merely guarded), and every public
    entry point must throw a clear `ex-info` rather than silently no-op'ing
    or crashing obscurely on a missing `js/document`. The real DOM behavior
-   is verified separately in a browser (see `dev/widgets_demo.cljs` +
+   is verified separately in a browser (see `dev/widgets_demo.cljk` +
    `dev/widgets_demo.html`) — ClojureScript compilation and browser
    execution aren't exercised by `clojure.test` (JVM)."
   (:require [clojure.test :refer [deftest is testing]]

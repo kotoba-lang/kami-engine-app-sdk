@@ -43,7 +43,7 @@ reader; it does not hold for widgets that are browser-only *by
 nature* — keeping them JS-only would only buy a second implementation
 to keep in sync with this repo's own spring/easing math
 (`kami-ui-sdk.motion`), not any cross-platform benefit. See
-`src/kami_ui_sdk/widgets.cljc`'s namespace docstring for the full
+`src/kami_ui_sdk/widgets.cljk`'s namespace docstring for the full
 rationale, and `dev/widgets_demo.{cljs,html}` for a real, browser-
 verified usage example (compile with `clojure -M:cljs -m cljs.main
 --optimizations simple --output-dir dev/out --output-to dev/out/main.js
@@ -53,13 +53,13 @@ verified usage example (compile with `clojure -M:cljs -m cljs.main
 
 | Namespace | Ported from | What's portable |
 |---|---|---|
-| `src/kami_ui_sdk/ui.cljc` | `kami-ui.js` | Theme data, position->style mapping, `LabelOverlay`'s camera/viewport projection + LOD font-size + culling math, `Button` style derivation, `Toast` color/sound lookups |
-| `src/kami_ui_sdk/motion.cljc` | `kami-motion.js` | All 9 easing functions, tween value-at-t, spring-physics integration step, transform-string building, preset animation prop builders, shake/pulse per-frame math, stagger delay schedule |
-| `src/kami_ui_sdk/effect.cljc` | `kami-effect.js` | Per-particle trajectory math for confetti/sparkle/ripple/floatText/flash/trail (position/scale/opacity as pure functions of normalized time) |
-| `src/kami_ui_sdk/sound.cljc` | `kami-sound.js` | All 15 sound presets as declarative note data, gain-envelope math, frequency-sweep math |
-| `src/kami_ui_sdk/engine_audio.cljc` | `kami-engine-audio.js` | HUD -> synthesis-parameter formulas (fundamental frequency, harmonic gains, lowpass cutoff, engine loudness, induction/tire noise params), impact envelope math |
-| `src/kami_ui_sdk/rtc.cljc` | `kami-rtc.js` | ICE server config data, ~30fps spatial-loop throttle predicate, `rtc_spatialize()` result -> Web Audio `PannerNode` param mapping |
-| `src/kami_ui_sdk/widgets.cljc` | `kami-ui.js`'s `Slider`/`ColorSwatch`/`Carousel` | Full DOM implementation (deliberate exception, see above) — the only namespace in this repo that isn't "pure logic only" |
+| `src/kami_ui_sdk/ui.cljk` | `kami-ui.js` | Theme data, position->style mapping, `LabelOverlay`'s camera/viewport projection + LOD font-size + culling math, `Button` style derivation, `Toast` color/sound lookups |
+| `src/kami_ui_sdk/motion.cljk` | `kami-motion.js` | All 9 easing functions, tween value-at-t, spring-physics integration step, transform-string building, preset animation prop builders, shake/pulse per-frame math, stagger delay schedule |
+| `src/kami_ui_sdk/effect.cljk` | `kami-effect.js` | Per-particle trajectory math for confetti/sparkle/ripple/floatText/flash/trail (position/scale/opacity as pure functions of normalized time) |
+| `src/kami_ui_sdk/sound.cljk` | `kami-sound.js` | All 15 sound presets as declarative note data, gain-envelope math, frequency-sweep math |
+| `src/kami_ui_sdk/engine_audio.cljk` | `kami-engine-audio.js` | HUD -> synthesis-parameter formulas (fundamental frequency, harmonic gains, lowpass cutoff, engine loudness, induction/tire noise params), impact envelope math |
+| `src/kami_ui_sdk/rtc.cljk` | `kami-rtc.js` | ICE server config data, ~30fps spatial-loop throttle predicate, `rtc_spatialize()` result -> Web Audio `PannerNode` param mapping |
+| `src/kami_ui_sdk/widgets.cljk` | `kami-ui.js`'s `Slider`/`ColorSwatch`/`Carousel` | Full DOM implementation (deliberate exception, see above) — the only namespace in this repo that isn't "pure logic only" |
 
 Most of the original JS is DOM/browser-API glue (`document.createElement`,
 `addEventListener`, `AudioContext`/`OscillatorNode`/`PannerNode`
